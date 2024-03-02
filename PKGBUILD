@@ -7,8 +7,8 @@
 
 _pkgname=aiohttp
 pkgname=python-aiohttp
-_gitcommit=6333c026422c6b0fe57ff63cde4104e2d00f47f4
-pkgver=3.9.1
+_gitcommit=bf4edce5d6c967fa1d6a581b3aaab1bd2f5121cd
+pkgver=3.9.3
 pkgrel=1
 pkgdesc='HTTP client/server for asyncio'
 arch=('x86_64')
@@ -35,6 +35,7 @@ checkdepends=(
   'gunicorn'
   'python-aiodns'
   'python-brotli'
+  'python-freezegun'
   'python-proxy.py'
   'python-pytest'
   'python-pytest-mock'
