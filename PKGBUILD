@@ -7,7 +7,6 @@
 
 _pkgname=aiohttp
 pkgname=python-aiohttp
-_gitcommit=bf4edce5d6c967fa1d6a581b3aaab1bd2f5121cd
 pkgver=3.9.3
 pkgrel=1
 pkgdesc='HTTP client/server for asyncio'
@@ -51,10 +50,10 @@ optdepends=(
   'python-brotli: for Brotli transfer-encodings support'
 )
 source=(
-  "${pkgname}::git+https://github.com/aio-libs/aiohttp#commit=${_gitcommit}"
+  "${pkgname}::git+https://github.com/aio-libs/aiohttp#tag=v${pkgver}"
   git+https://github.com/nodejs/llhttp.git
 )
-sha512sums=('SKIP'
+sha512sums=('68668a42748423a8ee14eba47ba68ffa6cec09e843fed3b14ea9c5b8a2a080b01c3f9c9478f99cf30ec6f465aac0913ef44238d456530f7d53e1b35741cb6846'
             'SKIP')
 
 pkgver() {
