@@ -10,11 +10,15 @@
 # Check if new updates break python-engineio
 
 _git="true"
+_github="true"
+_pypa="false"
 _os="$( \
   uname \
     -o)"
 if [[ "${_os}" == "Android" ]]; then
   _git="false"
+  _pypa="false"
+  _github="true"
 fi
 _py="python"
 _pyver="$( \
@@ -29,17 +33,19 @@ _pynextver="${_pymajver%.*}.$(( \
 _pkg=aiohttp
 pkgname="${_py}-${_pkg}"
 pkgver=3.11.1
+_llhttp_pkgver=9.2.1
 pkgrel=1
 pkgdesc='HTTP client/server for asyncio'
 arch=(
-  x86_64
-  aarch64
-  i686
-  armv7l
-  mips
-  pentium4
-  powerpc
-  arm
+  'x86_64'
+  'aarch64'
+  'i686'
+  'armv7l'
+  'armv6l'
+  'mips'
+  'pentium4'
+  'powerpc'
+  'arm'
 )
 url="https://${_pkg}.readthedocs.io"
 license=(
@@ -85,33 +91,40 @@ optdepends=(
 _http="https://github.com"
 _ns="aio-libs"
 _url="${_http}/${_ns}/${_pkg}"
+_llhttp_ns="nodejs"
+_llhttp_url="${_http}/${_llhttp_ns}/llhttp"
 _tag_name="tag"
 _tag="${pkgver}"
+_llhttp_tag="${_llhttp_pkgver}"
 _tarname="${_pkg}-${pkgver}"
-_pypi="https://pypi.io/packages/source"
-source=()
-b2sums=()
+_llhttp_tarname="llhttp-${_llhttp_pkgver}"
 if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     'git'
   )
   _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
   _sum="SKIP"
-  source+=(
-    "git+https://github.com/nodejs/llhttp.git"
-  )
-  b2sums+=(
-    'SKIP'
-  )
+  _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
+  _llhttp_sum="SKIP"
 elif [[ "${_git}" == "false" ]]; then
-  _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
-  _sum="f6c398ccd4c4dec25f83c9ed63ef2f4e8e91d7cce650664a7195d03e010ab5690b09323b88e2654f812d09a777003211601a979126e355d7daa1603a3ff472b9"
+  if [[ "${_pypa}" == "true" ]]; then
+    _pypi="https://pypi.io/packages/source"
+    _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
+    _sum="whatever"
+  elif [[ "${_github}" == "true" ]]; then
+    _src="${_tarname}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+    _sum="f6c398ccd4c4dec25f83c9ed63ef2f4e8e91d7cce650664a7195d03e010ab5690b09323b88e2654f812d09a777003211601a979126e355d7daa1603a3ff472b9"
+  fi
+  _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
+  _llhttp_sum="tbd"
 fi
-source+=(
+source=(
   "${_src}"
+  "${_llhttp_src}"
 )
-b2sums+=(
+b2sums=(
   "${_sum}"
+  "${_llhttp_sum}"
 )
 
 prepare() {
@@ -131,6 +144,11 @@ prepare() {
       submodule \
         update \
         --recursive
+  elif [[ "${_git}" == "false" ]]; then
+    cp \
+      -r \
+      "../${_llhttp_tarname}/"* \
+      "vendor/llhttp"
   fi
   sed \
     's|.install-cython ||' \
