@@ -112,7 +112,7 @@ elif [[ "${_git}" == "false" ]]; then
     _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
     _sum="whatever"
   elif [[ "${_github}" == "true" ]]; then
-    _src="${_tarname}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+    _src="${_tarname}.tar.gz::${_url}/archive/refs/tags/v${pkgver}.tar.gz"
     _sum="f6c398ccd4c4dec25f83c9ed63ef2f4e8e91d7cce650664a7195d03e010ab5690b09323b88e2654f812d09a777003211601a979126e355d7daa1603a3ff472b9"
   fi
   _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
