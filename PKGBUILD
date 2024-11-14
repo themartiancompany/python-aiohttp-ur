@@ -98,7 +98,6 @@ elif [[ "${_git}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
   _sum="tbd"
 fi
-c
 source+=(
   "${_src}"
   "git+https://github.com/nodejs/llhttp.git"
