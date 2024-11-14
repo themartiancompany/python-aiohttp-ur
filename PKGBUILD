@@ -92,7 +92,7 @@ if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     'git'
   )
-  _src="${_tarname}::git+${url}.git#${_tag_name}=${_tag}"
+  _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
   _sum='d8953e706641b861b85bd51be22b78146ff6e2ebe924f0c2d99f7c5b927524fcfde41690e49aa19a59e80e7f29a4f1f976d02f0e12e11e794936896e46046dc1'
 elif [[ "${_git}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
