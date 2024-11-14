@@ -116,7 +116,7 @@ elif [[ "${_git}" == "false" ]]; then
     _sum="f6c398ccd4c4dec25f83c9ed63ef2f4e8e91d7cce650664a7195d03e010ab5690b09323b88e2654f812d09a777003211601a979126e355d7daa1603a3ff472b9"
   fi
   _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
-  _llhttp_sum="tbd"
+  _llhttp_sum='5016e6cc7b4cd313ffcfb02ea2b8c8530510020b5727346236b4f8477ac1daca73883d99230fe312b688d5d8cb5252d5ef7e11bb4f914186e069f001c95ac401'
 fi
 source=(
   "${_src}"
@@ -212,3 +212,4 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
+b2sums=()
