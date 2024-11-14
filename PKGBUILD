@@ -10,6 +10,16 @@
 # Check if new updates break python-engineio
 
 _py="python"
+_py="python"
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
 _pkg=aiohttp
 pkgname="${_py}-${_pkg}"
 pkgver=3.10.0
@@ -30,7 +40,8 @@ license=(
   "Apache-2.0"
 )
 depends=(
- "${_py}"
+ "${_py}>=${_pymajver}"
+ "${_py}<${_pynextver}"
  "${_py}-aiohappyeyeballs"
  "${_py}-aiosignal"
  "${_py}-attrs"
