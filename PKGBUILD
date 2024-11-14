@@ -14,7 +14,7 @@ _os="$( \
   uname \
     -o)"
 if [[ "${_os}" == "Android" ]]; then
-  _git="true"
+  _git="false"
 fi
 _py="python"
 _pyver="$( \
@@ -88,15 +88,17 @@ _url="${_http}/${_ns}/${_pkg}"
 _tag_name="tag"
 _tag="${pkgver}"
 _tarname="${_pkg}-${pkgver}"
+_pypi="https://pypi.io/packages/source"
 if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     'git'
   )
   _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
-  _sum='d8953e706641b861b85bd51be22b78146ff6e2ebe924f0c2d99f7c5b927524fcfde41690e49aa19a59e80e7f29a4f1f976d02f0e12e11e794936896e46046dc1'
+  _sum="SKIP"
+  # _sum='d8953e706641b861b85bd51be22b78146ff6e2ebe924f0c2d99f7c5b927524fcfde41690e49aa19a59e80e7f29a4f1f976d02f0e12e11e794936896e46046dc1'
 elif [[ "${_git}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
-  _sum="tbd"
+  _sum="ce37d40e94ef836ae63a56b1b01251a34a07c469120393f8006964f54eea5f27cd4277fb0f69174cf652e52fbb0d77cda53ffe41c785922717defde2df873dd9"
 fi
 source+=(
   "${_src}"
@@ -110,19 +112,21 @@ b2sums=(
 prepare() {
   cd \
     "${pkgname}"
-  git \
-    submodule \
-      init
-  git \
-    config \
-      submodule.vendor/llhttp.url \
-      ../llhttp
-  git \
-    -c \
-      protocol.file.allow=always \
-    submodule \
-      update \
-      --recursive
+  if [[ "${_git}" == "true" ]]; then
+    git \
+      submodule \
+        init
+    git \
+      config \
+        submodule.vendor/llhttp.url \
+        ../llhttp
+    git \
+      -c \
+        protocol.file.allow=always \
+      submodule \
+        update \
+        --recursive
+  fi
   sed \
     's|.install-cython ||' \
     -i \
@@ -184,3 +188,5 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
+b2sums=('ce37d40e94ef836ae63a56b1b01251a34a07c469120393f8006964f54eea5f27cd4277fb0f69174cf652e52fbb0d77cda53ffe41c785922717defde2df873dd9'
+        'SKIP')
