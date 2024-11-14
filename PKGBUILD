@@ -164,7 +164,7 @@ prepare() {
     -i \
     'tools/gen.py'
   sed \
-    "s|folder = ROOT / \"aiohttp\"|folder = \"$(pwd)/aiohttp\"|" \
+    "s|folder = ROOT / \"aiohttp\"|folder = ROOT / \"src/${_pkg}-${pkgver}/aiohttp\"|" \
     -i \
     'tools/gen.py'
   # This test calls the Python interpreter,
