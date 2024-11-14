@@ -154,10 +154,19 @@ prepare() {
     's|.install-cython ||' \
     -i \
     Makefile
+  # ${_url}/issues/9981
   sed \
     "s|aiohttp/hdrs.py|$(pwd)/aiohttp/hdrs.py|" \
     -i \
-    Makefile
+    'Makefile'
+  sed \
+    "s|aiohttp/hdrs.py|$(pwd)/aiohttp/hdrs.py|" \
+    -i \
+    'tools/gen.py'
+  sed \
+    "s|folder = ROOT / \"aiohttp\"|folder = \"$(pwd)/aiohttp\"|" \
+    -i \
+    'tools/gen.py'
   # This test calls the Python interpreter,
   # we need to make sure that the path
   # for the C extensions is correct there as well
