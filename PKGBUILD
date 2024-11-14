@@ -111,7 +111,7 @@ b2sums=(
 
 prepare() {
   cd \
-    "${pkgname}"
+    "${_tarname}"
   if [[ "${_git}" == "true" ]]; then
     git \
       submodule \
@@ -135,7 +135,8 @@ prepare() {
   # we need to make sure that the path
   # for the C extensions is correct there as well
   sed \
-    -i "s/import {import_path!s}/import sys; sys.path.insert(0, '{os.environ['PYTHONPATH']}'); &/" \
+    -i \
+    "s/import {import_path!s}/import sys; sys.path.insert(0, '{os.environ['PYTHONPATH']}'); &/" \
     tests/test_circular_imports.py
   # Remove coverage testing
   sed \
@@ -146,7 +147,7 @@ prepare() {
 
 build() {
   cd \
-    "${pkgname}"
+    "${_tarname}"
   make \
     generate-llhttp \
     cythonize
@@ -159,7 +160,7 @@ build() {
 
 check() {
   cd \
-    "${pkgname}"
+    "${_tarname}"
   local \
     python_version=$( \
       python \
@@ -179,7 +180,7 @@ check() {
 
 package() {
   cd \
-    "${pkgname}"
+    "${_tarname}"
   "${_py}" \
     -m \
       installer \
@@ -188,5 +189,3 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
-b2sums=('ce37d40e94ef836ae63a56b1b01251a34a07c469120393f8006964f54eea5f27cd4277fb0f69174cf652e52fbb0d77cda53ffe41c785922717defde2df873dd9'
-        'SKIP')
