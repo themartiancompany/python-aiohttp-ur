@@ -28,7 +28,7 @@ _pynextver="${_pymajver%.*}.$(( \
   ${_pyminver} + 1))"
 _pkg=aiohttp
 pkgname="${_py}-${_pkg}"
-pkgver=3.10.0
+pkgver=3.11.1
 pkgrel=1
 pkgdesc='HTTP client/server for asyncio'
 arch=(
@@ -105,7 +105,7 @@ if [[ "${_git}" == "true" ]]; then
   )
 elif [[ "${_git}" == "false" ]]; then
   _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
-  _sum="ce37d40e94ef836ae63a56b1b01251a34a07c469120393f8006964f54eea5f27cd4277fb0f69174cf652e52fbb0d77cda53ffe41c785922717defde2df873dd9"
+  _sum="f6c398ccd4c4dec25f83c9ed63ef2f4e8e91d7cce650664a7195d03e010ab5690b09323b88e2654f812d09a777003211601a979126e355d7daa1603a3ff472b9"
 fi
 source+=(
   "${_src}"
@@ -194,3 +194,4 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
+b2sums=()
