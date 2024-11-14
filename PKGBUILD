@@ -87,6 +87,7 @@ optdepends=(
   'gunicorn: to deploy using Gunicorn'
   "${_py}-aiodns: for fast DNS resolving"
   "${_py}-brotli: for Brotli transfer-encodings support"
+  "${_py}-propcache: cached properties"
 )
 _http="https://github.com"
 _ns="aio-libs"
