@@ -1,40 +1,124 @@
 # SPDX-License-Identifier: AGPL-3.0
+
+#    ----------------------------------------------------------------------
+#    Copyright © 2024, 2025, 2026
+#                Pellegrino Prevete
 #
-# Maintainer: Truocolo <truocolo@aol.com>
-# Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
-# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
-# Maintainer: Daniel M. Capella <polyzen@archlinux.org>
-# Contributor: Jonas Witschel <diabonas@archlinux.org>
-# Contributor: Philipp A. <flying-sheep@web.de>
+#    All rights reserved
+#    ----------------------------------------------------------------------
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Maintainers:
+#   Truocolo
+#     <truocolo@aol.com>
+#     <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
+#   Pellegrino Prevete (dvorak)
+#     <pellegrinoprevete@gmail.com>
+#     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
+#   Levente Polyak
+#     <anthraxx[at]archlinux[dot]org>
+#   Daniel M. Capella
+#     <polyzen@archlinux.org>
+# Contributors:
+#   Jonas Witschel
+#     <diabonas@archlinux.org>
+#   Philipp A.
+#     <flying-sheep@web.de>
 
 # Check if new updates break python-engineio
 
-_git="true"
-_github="true"
-_pypa="false"
-_os="$( \
+_os="$(
   uname \
     -o)"
-if [[ "${_os}" == "Android" ]]; then
-  _git="false"
+_evmfs_available="$(
+  command \
+    -v \
+    "evmfs" || \
+    true)"
+if [[ ! -v "_evmfs" ]]; then
+  if [[ "${_evmfs_available}" != "" ]]; then
+    _evmfs="true"
+  elif [[ "${_evmfs_available}" == "" ]]; then
+    _evmfs="false"
+  fi
+fi
+if [[ ! -v "_git" ]]; then
+  if [[ "${_evmfs}" == "true" ]]; then
+    _git="true"
+  elif [[ "${_evmfs}" == "false" ]]; then
+    _git="false"
+  fi
+fi
+if [[ ! -v "_offline" ]]; then
+  _offline="false"
+fi
+if [[ ! -v "_git_service" ]]; then
+  if [[ "${_evmfs}" == "true" ]]; then
+    _git_service="gitlab"
+  elif [[ "${_evmfs}" == "true" ]]; then
+    _git_service="github"
+  fi
+fi
+if [[ ! -v "_git_http" ]]; then
+  _git_http="${_git_service}"
+fi
+if [[ ! -v "_ns" ]]; then
+  if [[ "${_git_service}" == "github"  ]]; then
+    _ns="aio-libs"
+  elif [[ "${_git_service}" == "gitlab"  ]]; then
+    _ns="themartiancompany"
+  fi
+fi
+if [[ ! -v "_archive_format" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    if [[ "${_evmfs}" == "true" ]]; then
+      _archive_format="bundle"
+    elif [[ "${_evmfs}" == "false" ]]; then
+      _archive_format="git"
+    fi
+  elif [[ "${_git}" == "false" ]]; then
+    if [[ "${_git_service}" == "github" ]]; then
+      _archive_format="zip"
+    elif [[ "${_git_service}" == "gitlab" ]]; then
+      _archive_format="tar.gz"
+    fi
+  fi
+fi
+if [[ ! -v "_pypa" ]]; then
   _pypa="false"
-  _github="true"
 fi
 _py="python"
-_pyver="$( \
+_pyver="$(
   "${_py}" \
     -V | \
     awk \
       '{print $2}')"
 _pymajver="${_pyver%.*}"
 _pyminver="${_pymajver#*.}"
-_pynextver="${_pymajver%.*}.$(( \
+_pynextver="${_pymajver%.*}.$((
   ${_pyminver} + 1))"
 _pkg=aiohttp
-pkgname="${_py}-${_pkg}"
+pkgbase="${_py}-${_pkg}"
+pkgname=(
+  "${pkgbase}"
+)
 pkgver=3.11.1
+_commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
-pkgrel=1
+_llhttp_commit=""
+pkgrel=3
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -64,11 +148,22 @@ depends=(
 makedepends=(
   'cython'
   'npm'
+  "${_py}"
   "${_py}-build"
   "${_py}-installer"
   "${_py}-setuptools"
   "${_py}-wheel"
 )
+if [[ "${_git}" == "true" ]]; then
+  makedepends+=(
+    'git'
+  )
+fi
+if [[ "${_evmfs}" == "true" ]]; then
+  makedepends+=(
+    "evmfs"
+  )
+fi
 checkdepends=(
   'gunicorn'
   "${_py}-aiodns"
@@ -89,44 +184,128 @@ optdepends=(
   "${_py}-brotli: for Brotli transfer-encodings support"
   "${_py}-propcache: cached properties"
 )
-_http="https://github.com"
-_ns="aio-libs"
+_http="https://${_git_service}.com"
+source=()
+sha256sums=()
 _url="${_http}/${_ns}/${_pkg}"
+_tag="${_commit}"
+_tag_name="commit"
+_tarname="${_pkg}-${_tag}"
+_tarfile="${_tarname}.${_archive_format}"
+if [[ "${_offline}" == "true" ]]; then
+  _url="file://${HOME}/${pkgname}"
+fi
 _llhttp_ns="nodejs"
 _llhttp_url="${_http}/${_llhttp_ns}/llhttp"
-_tag_name="tag"
-_tag="${pkgver}"
+# _tag_name="tag"
+# _tag="${pkgver}"
 _llhttp_tag="${_llhttp_pkgver}"
-_tarname="${_pkg}-${pkgver}"
 _llhttp_tarname="llhttp-${_llhttp_pkgver}"
-if [[ "${_git}" == "true" ]]; then
-  makedepends+=(
-    'git'
-  )
-  _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
-  _sum="SKIP"
-  _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
-  _llhttp_sum="SKIP"
-elif [[ "${_git}" == "false" ]]; then
-  if [[ "${_pypa}" == "true" ]]; then
-    _pypi="https://pypi.io/packages/source"
-    _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
-    _sum="whatever"
-  elif [[ "${_github}" == "true" ]]; then
-    _src="${_tarname}.tar.gz::${_url}/archive/refs/tags/v${pkgver}.tar.gz"
-    _sum="35472ae5ec22bf653c743c2f467829d6fcd86565f0672646f90f17a071b5c9eca6a0349c85154fc8d2830d1a326d836395a5ea318980e53e4de6702183f7d2b2"
+_gitlab_sum="e975ef3dd65c17396dbfb605ef43614dcb0abd59b45fb32498ffa07321688bf4"
+_gitlab_sig_sum="baaab158cd64ab456ed368f43d82c2a9dc02e9074e5fcbabe86f0a2cd9954298"
+_github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
+_github_sig_sum="f822f8faade3a590a3abc20d480837ce9f9fcbdddeac3e5e3326f280ebacad4b"
+_bundle_sum="SKIP"
+_bundle_sig_sum="SKIP"
+if [[ "${_evmfs}" == "true" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    _sum="${_bundle_sum}"
+    _sig_sum="${_bundle_sig_sum}"
+    # Dvorak
+    _evmfs_ns="0x87003Bd6C074C713783df04f36517451fF34CBEf"
+  elif [[ "${_git}" == "false" ]]; then
+    # Truocolo
+    _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+    _sum="${_github_sum}"
+    _sig_sum="${_github_sig_sum}"
+    if [[ "${_git_service}" == "github" ]]; then
+      _sum="${_github_sum}"
+      _sig_sum="${_github_sig_sum}"
+      # Truocolo
+      _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+    fi
   fi
-  _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
-  _llhttp_sum='5016e6cc7b4cd313ffcfb02ea2b8c8530510020b5727346236b4f8477ac1daca73883d99230fe312b688d5d8cb5252d5ef7e11bb4f914186e069f001c95ac401'
+elif [[ "${_evmfs}" == "false" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    _sum="SKIP"
+    _sig_sum="SKIP"
+    # Truocolo
+    _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+  elif [[ "${_git}" == "false" ]]; then
+    if [[ "${_git_service}" == "github" ]]; then
+      _sum="${_github_sum}"
+      _sig_sum="${_github_sig_sum}"
+      # Truocolo
+      _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+    elif [[ "${_git_service}" == "gitlab" ]]; then
+      _sum="${_gitlab_sum}"
+      _sig_sum="${_gitlab_sig_sum}"
+      # Truocolo
+      _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+    fi
+  fi
 fi
-source=(
+_evmfs_network="100"
+_evmfs_address="0x69470b18f8b8b5f92b48f6199dcb147b4be96571"
+_evmfs_dir="evmfs://${_evmfs_network}/${_evmfs_address}/${_evmfs_ns}"
+_evmfs_uri="${_evmfs_dir}/${_sum}"
+_evmfs_src="${_tarfile}::${_evmfs_uri}"
+_sig_uri="${_evmfs_dir}/${_sig_sum}"
+_sig_src="${_tarfile}.sig::${_sig_uri}"
+if [[ "${_evmfs}" == "true" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
+  _llhttp_sum="SKIP"
+  elif [[ "${_git}" == "false" ]]; then
+    _llhttp_uri="${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
+    _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_uri}"
+    _llhttp_sum='SKIP'
+  fi
+  _src="${_evmfs_src}"
+  source+=(
+    "${_sig_src}"
+  )
+  sha256sums+=(
+    "${_sig_sum}"
+  )
+elif [[ "${_evmfs}" == "false" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
+    _sum="SKIP"
+    _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
+    _llhttp_sum="SKIP"
+  elif [[ "${_git}" == "false" ]]; then
+    if [[ "${_pypa}" == "true" ]]; then
+      _pypi="https://pypi.io/packages/source"
+      _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
+      _sum="whatever"
+    elif [[ "${_git_service}" == "github" ]]; then
+      if [[ "${_tag_name}" == "tag" ]]; then
+        _uri="${_url}/archive/refs/tags/v${pkgver}.tar.gz"
+        _src="${_tarfile}::${_uri}"
+        _sum="${_github_release_sum}"
+      elif [[ "${_tag_name}" == "commit" ]]; then
+        _uri="${_url}/archive/${_commit}.${_archive_format}"
+        _src="${_tarfile}::${_uri}"
+        _sum="${_github_sum}"
+      fi
+    fi
+    _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
+    _llhttp_sum='SKIP'
+  fi
+fi
+source+=(
   "${_src}"
   "${_llhttp_src}"
 )
-b2sums=(
+sha256sums+=(
   "${_sum}"
   "${_llhttp_sum}"
 )
+# b2sums=(
+#   "${_sum}"
+#   "${_llhttp_sum}"
+# )
 
 prepare() {
   cd \
@@ -174,12 +353,12 @@ prepare() {
   sed \
     -i \
     "s/import {import_path!s}/import sys; sys.path.insert(0, '{os.environ['PYTHONPATH']}'); &/" \
-    tests/test_circular_imports.py
+    "tests/test_circular_imports.py"
   # Remove coverage testing
   sed \
-    -i \
     '/--cov=/d' \
-    setup.cfg
+    -i \
+    "setup.cfg"
 }
 
 build() {
@@ -196,23 +375,24 @@ build() {
 }
 
 check() {
+  local \
+    _python_version
   cd \
     "${_tarname}"
-  local \
-    python_version=$( \
-      python \
-        -c \
-        'import sys; print("".join(map(str, sys.version_info[:2])))')
+  _python_version=$(
+    python \
+      -c \
+      'import sys; print("".join(map(str, sys.version_info[:2])))')
   # Docker tests
   mv \
-    tests/autobahn/test_autobahn.py{,.bak}
+    "tests/autobahn/test_autobahn.py"{"",".bak"}
   # https://github.com/aio-libs/aiohttp/issues/8234
-  PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-$python_version" \
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-cpython-${_python_version}" \
   pytest \
     --deselect \
       'tests/test_pytest_plugin.py::test_aiohttp_plugin'
   mv \
-    tests/autobahn/test_autobahn.py{.bak,}
+    "tests/autobahn/test_autobahn.py"{".bak",""}
 }
 
 package() {
@@ -220,9 +400,9 @@ package() {
     "${_tarname}"
   "${_py}" \
     -m \
-      installer \
+      "installer" \
     --destdir="${pkgdir}" \
-    dist/*.whl
+    "dist/"*".whl"
 }
 
 # vim: ts=2 sw=2 et:
