@@ -56,9 +56,9 @@ if [[ ! -v "_evmfs" ]]; then
 fi
 if [[ ! -v "_git" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
-    _git="true"
-  elif [[ "${_evmfs}" == "false" ]]; then
     _git="false"
+  elif [[ "${_evmfs}" == "false" ]]; then
+    _git="true"
   fi
 fi
 if [[ ! -v "_offline" ]]; then
@@ -81,6 +81,9 @@ if [[ ! -v "_ns" ]]; then
     _ns="themartiancompany"
   fi
 fi
+if [[ ! -v "_tag_name" ]]; then
+  _tag_name="commit"
+fi
 if [[ ! -v "_archive_format" ]]; then
   if [[ "${_git}" == "true" ]]; then
     if [[ "${_evmfs}" == "true" ]]; then
@@ -90,7 +93,11 @@ if [[ ! -v "_archive_format" ]]; then
     fi
   elif [[ "${_git}" == "false" ]]; then
     if [[ "${_git_service}" == "github" ]]; then
-      _archive_format="zip"
+      if [[ "${_tag_name}" == "commit" ]]; then
+        _archive_format="zip"
+      elif [[ "${_tag_name}" == "tag" ]]; then
+        _archive_format="tar.gz"
+      fi
     elif [[ "${_git_service}" == "gitlab" ]]; then
       _archive_format="tar.gz"
     fi
@@ -118,7 +125,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit=""
-pkgrel=6
+pkgrel=8
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -188,8 +195,13 @@ _http="https://${_git_service}.com"
 source=()
 sha256sums=()
 _url="${_http}/${_ns}/${_pkg}"
-_tag="${_commit}"
-_tag_name="commit"
+if [[ ! -v "_tag" ]]; then
+  if [[ "${_tag_name}" == "tag" ]]; then
+    _tag="${pkgver}"
+  elif [[ "${_tag_name}" == "commit" ]]; then
+    _tag="${_commit}"
+  fi
+fi
 _tarname="${_pkg}-${_tag}"
 _tarfile="${_tarname}.${_archive_format}"
 if [[ "${_offline}" == "true" ]]; then
@@ -197,10 +209,10 @@ if [[ "${_offline}" == "true" ]]; then
 fi
 _llhttp_ns="nodejs"
 _llhttp_url="${_http}/${_llhttp_ns}/llhttp"
-# _tag_name="tag"
-# _tag="${pkgver}"
 _llhttp_tag="${_llhttp_pkgver}"
 _llhttp_tarname="llhttp-${_llhttp_pkgver}"
+_github_release_sum="SKIP"
+_github_release_sig_sum=""
 _gitlab_sum="e975ef3dd65c17396dbfb605ef43614dcb0abd59b45fb32498ffa07321688bf4"
 _gitlab_sig_sum="baaab158cd64ab456ed368f43d82c2a9dc02e9074e5fcbabe86f0a2cd9954298"
 _github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
