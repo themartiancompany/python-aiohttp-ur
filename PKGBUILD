@@ -219,13 +219,15 @@ if [[ "${_offline}" == "true" ]]; then
 fi
 _llhttp_ns="nodejs"
 _llhttp_url="${_http}/${_llhttp_ns}/llhttp"
-_llhttp_tarname="llhttp-${_llhttp_pkgver}"
+_llhttp_tarname="llhttp-${_llhttp_tag}"
 _github_release_sum="SKIP"
 _github_release_sig_sum=""
 _gitlab_sum="e975ef3dd65c17396dbfb605ef43614dcb0abd59b45fb32498ffa07321688bf4"
 _gitlab_sig_sum="baaab158cd64ab456ed368f43d82c2a9dc02e9074e5fcbabe86f0a2cd9954298"
 _github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
 _github_sig_sum="f822f8faade3a590a3abc20d480837ce9f9fcbdddeac3e5e3326f280ebacad4b"
+_llhttp_sum="SKIP"
+_llhttp_sig_sum="SKIP"
 _bundle_sum="SKIP"
 _bundle_sig_sum="SKIP"
 if [[ "${_evmfs}" == "true" ]]; then
@@ -270,6 +272,9 @@ _evmfs_network="100"
 _evmfs_address="0x69470b18f8b8b5f92b48f6199dcb147b4be96571"
 _evmfs_dir="evmfs://${_evmfs_network}/${_evmfs_address}/${_evmfs_ns}"
 _evmfs_uri="${_evmfs_dir}/${_sum}"
+_evmfs_src="${_tarfile}::${_evmfs_uri}"
+_llhttp_evmfs_uri="${_evmfs_dir}/${_llhttp_sum}"
+_llhttp_evmfs_src="${_llhttp_tarname}.tar.gz::${_llhttp_evmfs_uri}"
 _evmfs_src="${_tarfile}::${_evmfs_uri}"
 _sig_uri="${_evmfs_dir}/${_sig_sum}"
 _sig_src="${_tarfile}.sig::${_sig_uri}"
@@ -341,7 +346,7 @@ prepare() {
     git \
       config \
         "submodule.vendor/llhttp.url" \
-        "../llhttp"
+        "../llhttp-${_llhttp_tag}"
     git \
       -c \
         "protocol.file.allow=always" \
@@ -349,10 +354,13 @@ prepare() {
         update \
         --recursive
   elif [[ "${_git}" == "false" ]]; then
+    mkdir \
+      -p \
+      "vendor"
     cp \
       -r \
       "../${_llhttp_tarname}/"* \
-      "vendor/llhttp"
+      "vendor/llhttp-${_llhttp_pkgver}"
   fi
   sed \
     's|.install-cython ||' \
