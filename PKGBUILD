@@ -118,7 +118,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit=""
-pkgrel=3
+pkgrel=4
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -211,8 +211,8 @@ if [[ "${_evmfs}" == "true" ]]; then
   if [[ "${_git}" == "true" ]]; then
     _sum="${_bundle_sum}"
     _sig_sum="${_bundle_sig_sum}"
-    # Dvorak
-    _evmfs_ns="0x87003Bd6C074C713783df04f36517451fF34CBEf"
+    # Truocolo
+    _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
   elif [[ "${_git}" == "false" ]]; then
     # Truocolo
     _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
