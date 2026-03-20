@@ -118,7 +118,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit=""
-pkgrel=5
+pkgrel=6
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
