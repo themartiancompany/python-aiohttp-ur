@@ -1545,6 +1545,7 @@ jobs:
         run: |
           ls
           _evmfs="false" \
+          _git_service="github" \
           recipe-get \
             -o \
               "array" \

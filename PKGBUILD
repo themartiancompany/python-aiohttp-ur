@@ -67,7 +67,7 @@ fi
 if [[ ! -v "_git_service" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
     _git_service="gitlab"
-  elif [[ "${_evmfs}" == "true" ]]; then
+  elif [[ "${_evmfs}" == "false" ]]; then
     _git_service="github"
   fi
 fi
@@ -82,7 +82,15 @@ if [[ ! -v "_ns" ]]; then
   fi
 fi
 if [[ ! -v "_tag_name" ]]; then
-  _tag_name="commit"
+  if [[ "${_evmfs}" == "true" ]]; then
+    _tag_name="commit"
+  elif [[ "${_evmfs}" == "false" ]]; then
+    if [[ "${_git}" == "true" ]]; then
+      _tag_name="commit"
+    elif [[ "${_git}" == "false" ]]; then
+      _tag_name="tag"
+    fi
+  fi
 fi
 if [[ ! -v "_archive_format" ]]; then
   if [[ "${_git}" == "true" ]]; then
@@ -124,7 +132,7 @@ pkgname=(
 pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
-_llhttp_commit=""
+_llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
 pkgrel=8
 pkgdesc='HTTP client/server for asyncio'
 arch=(
@@ -198,8 +206,10 @@ _url="${_http}/${_ns}/${_pkg}"
 if [[ ! -v "_tag" ]]; then
   if [[ "${_tag_name}" == "tag" ]]; then
     _tag="${pkgver}"
+    _llhttp_tag="${_llhttp_pkgver}"
   elif [[ "${_tag_name}" == "commit" ]]; then
     _tag="${_commit}"
+    _llhttp_tag="${_llhttp_commit}"
   fi
 fi
 _tarname="${_pkg}-${_tag}"
@@ -209,7 +219,6 @@ if [[ "${_offline}" == "true" ]]; then
 fi
 _llhttp_ns="nodejs"
 _llhttp_url="${_http}/${_llhttp_ns}/llhttp"
-_llhttp_tag="${_llhttp_pkgver}"
 _llhttp_tarname="llhttp-${_llhttp_pkgver}"
 _github_release_sum="SKIP"
 _github_release_sig_sum=""
