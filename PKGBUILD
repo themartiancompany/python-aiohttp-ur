@@ -118,7 +118,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit=""
-pkgrel=4
+pkgrel=5
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -255,7 +255,7 @@ _sig_src="${_tarfile}.sig::${_sig_uri}"
 if [[ "${_evmfs}" == "true" ]]; then
   if [[ "${_git}" == "true" ]]; then
     _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
-  _llhttp_sum="SKIP"
+    _llhttp_sum="SKIP"
   elif [[ "${_git}" == "false" ]]; then
     _llhttp_uri="${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
     _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_uri}"
@@ -289,6 +289,9 @@ elif [[ "${_evmfs}" == "false" ]]; then
         _src="${_tarfile}::${_uri}"
         _sum="${_github_sum}"
       fi
+    elif [[ "${_git_service}" == "gitlab" ]]; then
+      _src="hurr"
+      _sum="whatever"
     fi
     _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
     _llhttp_sum='SKIP'
