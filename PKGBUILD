@@ -442,7 +442,7 @@ build() {
   cd \
     "${_tarname}"
   make \
-    generate-llhttp \
+    generate-llhttp
   if [[ "${_pypa}" == "false" ]]; then
     make \
       cythonize
