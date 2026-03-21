@@ -931,6 +931,29 @@ jobs:
             "${PWD}" \
             -iname \
               "*.pkg.tar.*"
+          if [[ "$(uname -m)" == "armv8l" ]]; then
+            _msg=(
+              "Weird 'armv8l' architecture detected"
+              "for 'arm' container. Renaming file"
+              "as if built by architecture 'arm'."
+            )
+            echo \
+              "${_msg[*]}"
+            for _file in $(find \
+                             "${PWD}" \
+                             -iname \
+                               "*-armv8l.pkg.tar.xz"); do
+              _file_name="${_file%*-armv8l.pkg.tar.xz}"
+                mv \
+                  "${_file}" \
+                  "${_file_name}-arm.pkg.tar.xz" || \
+                true
+                mv \
+                  "${_file}.sig" \
+                  "${_file_name}-arm.pkg.tar.xz.sig" || \
+                true
+            done
+          fi
       # - name:
       #     Installs the package.
       #   run: |
