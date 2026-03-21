@@ -1052,6 +1052,8 @@ jobs:
             "jq" \
             "python" \
             "python-docutils" \
+            "python-pip" \
+            "python-build" \
             "tree"
       - uses:
           actions/checkout@v4.2.2

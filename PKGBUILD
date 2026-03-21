@@ -141,7 +141,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
-pkgrel=20
+pkgrel=21
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -178,6 +178,11 @@ makedepends=(
   "${_py}-wheel"
   "${_py}-multidict"
 )
+if [[ "${_pypa}" == "true" ]]; then
+  makedepends+=(
+    "${_py}-pip"
+)
+fi
 if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     'git'
@@ -380,7 +385,7 @@ prepare() {
         update \
         --recursive
   elif [[ "${_git}" == "false" ]]; then
-    if [[ "${_pipa}" == "false" ]]; then
+    if [[ "${_pypa}" == "false" ]]; then
       mkdir \
         ".git"
       mkdir \
