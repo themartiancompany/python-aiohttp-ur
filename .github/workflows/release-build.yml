@@ -932,55 +932,9 @@ jobs:
           find \
             "${PWD}" \
             -iname \
-              "*.pkg.tar.*"; \
-          export \
-            _arch="$( \
-              uname \
-                -m)"
-          export \
-            _pkgs="$( \
-            find \
-              "${PWD}" \
-              -iname \
-                "*.pkg.tar.xz")" && \
-          for _file in ${_pkgs}; do \
-            echo \
-              "file: ${_file}"; \
-            _file_name="${_file%*-armv8l.pkg.tar.xz}" && \
-            echo \
-              "file: ${_file}" && \
-            if [[ "${_arch}" == "armv8l" ]]; then \
-              mv \
-                "${_file}" \
-                "${_file_name}-arm.pkg.tar.xz" || \
-              true && \
-              mv \
-                "${_file}.sig" \
-                "${_file_name}-arm.pkg.tar.xz.sig" || \
-              true; \
-            fi \
-          done
-          # if [[ "$(uname -m)" == "armv8l" ]]; then \
-          #   echo \
-          #     "Weird 'armv8l' architecture detected" \
-          #     "for 'arm' container. Renaming file" \
-          #     "as if built by architecture 'arm'."; \
-          #   for _file in $(find \
-          #                    "${PWD}" \
-          #                    -iname \
-          #                      "*-armv8l.pkg.tar.xz" || \
-          #                  true); do \
-          #     _file_name="${_file%*-armv8l.pkg.tar.xz}"; \
-          #       mv \
-          #         "${_file}" \
-          #         "${_file_name}-arm.pkg.tar.xz" || \
-          #       true; \
-          #       mv \
-          #         "${_file}.sig" \
-          #         "${_file_name}-arm.pkg.tar.xz.sig" || \
-          #       true; \
-          #   done; \
-          # fi
+              "*.pkg.tar.*"
+          bash \
+            ".github/android-arm32-fix"
       # - name:
       #     Installs the package.
       #   run: |
