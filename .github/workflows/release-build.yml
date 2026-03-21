@@ -942,7 +942,8 @@ jobs:
             for _file in $(find \
                              "${PWD}" \
                              -iname \
-                               "*-armv8l.pkg.tar.xz"); do
+                               "*-armv8l.pkg.tar.xz" || \
+                           true); do
               _file_name="${_file%*-armv8l.pkg.tar.xz}"
                 mv \
                   "${_file}" \
