@@ -116,7 +116,7 @@ if [[ ! -v "_archive_format" ]]; then
 fi
 if [[ ! -v "_pypa" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
-    _pypa="false"
+    _pypa="true"
   elif [[ "${_evmfs}" == "false" ]]; then
     _pypa="true"
   fi
@@ -140,7 +140,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
-pkgrel=27
+pkgrel=29
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -247,7 +247,7 @@ _github_sig_sum="f822f8faade3a590a3abc20d480837ce9f9fcbdddeac3e5e3326f280ebacad4
 _llhttp_sum="9b8a4838b5813c4ad11dfb79e695bd867b493ec7f13aae00a7567c64c10613a5"
 _llhttp_sig_sum="f5d3d61c7088e540ec5fd03c70bfe835f1120b524d00ec45a0a6c4d9e438fb8b"
 _pypa_sum="1e59dc724138b264de2e7862b3953ab5db518df280b4fd60af6a1f54b229ebb7"
-_pypa_sig_sum="64815d19637c0495371ce4ee969a360a0dac914db0eb7d2a11ad6dbffae0713b"
+_pypa_sig_sum="cfbb3b3260c17d3b1d2f715422a4187265d5cc5705584f44c9df3bbed5d8c33a"
 _bundle_sum="SKIP"
 _bundle_sig_sum="SKIP"
 _llhttp_bundle_sum="SKIP"
