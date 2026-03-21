@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: AGPL-3.0
-039d92ec0e1833b89c8046f2f504417282d0beaa65f8f3c9d196abfd22c023f5  aiohttp-3.11.1.tar.gz.sig
 
 #    ----------------------------------------------------------------------
 #    Copyright © 2024, 2025, 2026
@@ -141,7 +140,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
-pkgrel=22
+pkgrel=23
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -444,7 +443,10 @@ build() {
     "${_tarname}"
   make \
     generate-llhttp \
-    cythonize
+  if [[ "${_pypa}" == "false" ]]; then
+    make \
+      cythonize
+  fi
   "${_py}" \
     -m \
       build \
