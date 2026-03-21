@@ -198,6 +198,10 @@ jobs:
             pip \
               install \
                 "flit-core"
+          /entrypoint.sh \
+            pip \
+              install \
+                "cython"
       # - name:
       #     Installs Rust.
       #   run: |
