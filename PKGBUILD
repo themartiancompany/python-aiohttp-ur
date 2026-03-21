@@ -115,7 +115,11 @@ if [[ ! -v "_archive_format" ]]; then
   fi
 fi
 if [[ ! -v "_pypa" ]]; then
-  _pypa="false"
+  if [[ "${_evmfs}" == "true" ]]; then
+    _pypa="false"
+  elif [[ "${_evmfs}" == "false" ]]; then
+    _pypa="true"
+  fi
 fi
 _py="python"
 _pyver="$(
@@ -136,7 +140,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
-pkgrel=15
+pkgrel=16
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -237,6 +241,8 @@ _github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
 _github_sig_sum="f822f8faade3a590a3abc20d480837ce9f9fcbdddeac3e5e3326f280ebacad4b"
 _llhttp_sum="9b8a4838b5813c4ad11dfb79e695bd867b493ec7f13aae00a7567c64c10613a5"
 _llhttp_sig_sum="f5d3d61c7088e540ec5fd03c70bfe835f1120b524d00ec45a0a6c4d9e438fb8b"
+_pypa_sum="63bad361ad74e56a36a11f9fde50370c105153380b24c7e13c0e2dfe3698d352"
+_pypa_sig_sum="039d92ec0e1833b89c8046f2f504417282d0beaa65f8f3c9d196abfd22c023f5"
 _bundle_sum="SKIP"
 _bundle_sig_sum="SKIP"
 _llhttp_bundle_sum="SKIP"
@@ -266,7 +272,12 @@ elif [[ "${_evmfs}" == "false" ]]; then
     # Truocolo
     _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
   elif [[ "${_git}" == "false" ]]; then
-    if [[ "${_git_service}" == "github" ]]; then
+    if [[ "${_pypa}" == "true" ]]; then
+      _sum="${_pypa_sum}"
+      _sig_sum="${_pypa_sig_sum}"
+      # Truocolo
+      _evmfs_ns="0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b"
+    elif [[ "${_git_service}" == "github" ]]; then
       _sum="${_github_sum}"
       _sig_sum="${_github_sig_sum}"
       # Truocolo
@@ -314,7 +325,6 @@ elif [[ "${_evmfs}" == "false" ]]; then
     if [[ "${_pypa}" == "true" ]]; then
       _pypi="https://pypi.io/packages/source"
       _src="${_tarname}.tar.gz::${_pypi}/${_pkg::1}/${_pkg}/${_pkg}-${pkgver}.tar.gz"
-      _sum="whatever"
     elif [[ "${_git_service}" == "github" ]]; then
       if [[ "${_tag_name}" == "tag" ]]; then
         _uri="${_url}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -413,6 +423,11 @@ prepare() {
     '/--cov=/d' \
     -i \
     "setup.cfg"
+  # Remove line 56 and 57 from Makefile
+  # sed \
+  #   "" \
+  #   -i \
+  #   "Makefile"
 }
 
 build() {
