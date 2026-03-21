@@ -141,7 +141,7 @@ pkgver=3.11.1
 _commit="fe1196c20c86d201990be45f4f0f4b2b167913ad"
 _llhttp_pkgver=9.2.1
 _llhttp_commit="b0b279fb5a617ab3bc2fc11c5f8bd937aac687c1"
-pkgrel=19
+pkgrel=20
 pkgdesc='HTTP client/server for asyncio'
 arch=(
   'x86_64'
@@ -380,38 +380,41 @@ prepare() {
         update \
         --recursive
   elif [[ "${_git}" == "false" ]]; then
-    mkdir \
-      ".git"
-    mkdir \
-      -p \
-      "vendor/llhttp"
-    ls \
-      -lsh \
-      "vendor"
-    # if [[ "${_llhttp_tag_name}" == "tag" ]]; then
-    cp \
-      -r \
-      "../${_llhttp_tarname}/"* \
-      "vendor/llhttp"
-    #fi
+    if [[ "${_pipa}" == "false" ]]; then
+      mkdir \
+        ".git"
+      mkdir \
+        -p \
+        "vendor/llhttp"
+      ls \
+        -lsh \
+        "vendor"
+      # if [[ "${_llhttp_tag_name}" == "tag" ]]; then
+      cp \
+        -r \
+        "../${_llhttp_tarname}/"* \
+        "vendor/llhttp"
+      sed \
+        's|.install-cython ||' \
+        -i \
+        Makefile
+    fi
   fi
-  sed \
-    's|.install-cython ||' \
-    -i \
-    Makefile
-  # ${_url}/issues/9981
-  sed \
-    "s|a${_pkg}/hdrs.py|${PWD}/${_pkg}/hdrs.py|" \
-    -i \
-    'Makefile'
-  sed \
-    "s|${_pkg}/hdrs.py|${PWD}/${_pkg}/hdrs.py|" \
-    -i \
-    'tools/gen.py'
-  sed \
-    "s|folder = ROOT / \"${_pkg}\"|folder = ROOT / \"src/${_pkg}-${pkgver}/${_pkg}\"|" \
-    -i \
-    'tools/gen.py'
+ if [[ -e "tools/gen.py" ]]; then
+    sed \
+      "s|a${_pkg}/hdrs.py|${PWD}/${_pkg}/hdrs.py|" \
+      -i \
+      'Makefile'
+    sed \
+      "s|${_pkg}/hdrs.py|${PWD}/${_pkg}/hdrs.py|" \
+      -i \
+      'tools/gen.py' || \
+      true
+    sed \
+      "s|folder = ROOT / \"${_pkg}\"|folder = ROOT / \"src/${_pkg}-${pkgver}/${_pkg}\"|" \
+      -i \
+      'tools/gen.py'
+  fi
   # This test calls the Python interpreter,
   # we need to make sure that the path
   # for the C extensions is correct there as well
