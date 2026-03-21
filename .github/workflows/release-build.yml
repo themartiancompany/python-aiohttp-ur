@@ -922,8 +922,8 @@ jobs:
               -- \
               -df \
               --nocheck \
-              --skippgpcheck \
-              --skipinteg
+              --skippgpcheck
+              # --skipinteg
           /entrypoint.sh \
             echo \
               "Home: ${HOME}"
@@ -963,8 +963,8 @@ jobs:
             makepkg \
               --nobuild \
               -df \
-              --skippgpcheck \
-              --skipinteg
+              --skippgpcheck
+              # --skipinteg
           echo \
             "::set-output name=version::$( \
               /entrypoint.sh \
@@ -991,9 +991,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-android-python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "dogeos-android-python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
   arch_release:
@@ -1659,7 +1659,7 @@ jobs:
                 "pkgbase")"
           su \
             -c \
-              "cd ${PWD} && _evmfs="false" _git_service="github" _pypa="true" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck --skipinteg && ls -lsh" - \
+              "cd ${PWD} && _evmfs="false" _git_service="github" _pypa="true" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck && ls -lsh" - \
             "user"
       # - name:
       #     Installs the package.
@@ -1708,9 +1708,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-gnu-python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "dogeos-gnu-python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
   msys2_release:
@@ -2093,8 +2093,8 @@ jobs:
           makepkg \
             -df \
             --nocheck \
-            --skippgpcheck \
-            --skipinteg
+            --skippgpcheck
+            # --skipinteg
           # _evmfs="false" \
           # _git_service="github" \
           # reallymakepkg \
@@ -2162,9 +2162,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
+            "python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_name:
-            "dogeos-windows-python-aiosignal-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
+            "dogeos-windows-python-aiohttp-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
 
