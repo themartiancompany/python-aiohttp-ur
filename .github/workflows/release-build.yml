@@ -63,13 +63,13 @@ jobs:
             architecture:
               i686
           - runner:
-              ubuntu-24.04-armv7l
+              ubuntu-24.04-arm
             platform:
               android
             platform_target:
               termux
             architecture:
-              armv7l
+              arm
           - runner:
               ubuntu-24.04
             platform:
