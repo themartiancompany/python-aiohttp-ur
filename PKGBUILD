@@ -223,8 +223,8 @@ fi
 _llhttp_ns="nodejs"
 _llhttp_url="${_http}/${_llhttp_ns}/llhttp"
 _llhttp_tarname="llhttp-${_llhttp_tag}"
-_github_release_sum="SKIP"
-_github_release_sig_sum=""
+_github_release_sum="63bad361ad74e56a36a11f9fde50370c105153380b24c7e13c0e2dfe3698d352"
+_github_release_sig_sum="4891e24b7b94b10ab60830f39f89a5b6afda62d5238c31d45c6915ea6a3ade83"
 _gitlab_sum="e975ef3dd65c17396dbfb605ef43614dcb0abd59b45fb32498ffa07321688bf4"
 _gitlab_sig_sum="baaab158cd64ab456ed368f43d82c2a9dc02e9074e5fcbabe86f0a2cd9954298"
 _github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
@@ -302,7 +302,6 @@ if [[ "${_evmfs}" == "true" ]]; then
 elif [[ "${_evmfs}" == "false" ]]; then
   if [[ "${_git}" == "true" ]]; then
     _src="${_tarname}::git+${_url}.git#${_tag_name}=${_tag}"
-    _sum="SKIP"
     _llhttp_src="${_llhttp_tarname}::git+${_llhttp_url}.git#${_tag_name}=${_llhttp_tag}"
     _llhttp_sum="SKIP"
   elif [[ "${_git}" == "false" ]]; then
