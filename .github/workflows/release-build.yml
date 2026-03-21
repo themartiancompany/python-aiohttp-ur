@@ -887,10 +887,32 @@ jobs:
             _arch="arm"; \
           fi && \
           /entrypoint.sh \
-            _evmfs="false" \
             arch="${_arch}" \
-            _pypa="true" \
             TERMUX_VERSION=50 \
+            _evmfs="false" \
+            _git="false" \
+            _git_service="github" \
+            _pypa="true" \
+            recipe-get \
+              -v \
+              "PKGBUILD" \
+              "source" && \
+          /entrypoint.sh \
+            arch="${_arch}" \
+            TERMUX_VERSION=50 \
+            _evmfs="false" \
+            _git="false" \
+            _git_service="github" \
+            _pypa="true" \
+            recipe-get \
+              -v \
+              "PKGBUILD" \
+              "sha256sums" && \
+          /entrypoint.sh \
+            TERMUX_VERSION=50 \
+            arch="${_arch}" \
+            _evmfs="false" \
+            _pypa="true" \
             _git_service="github" \
             reallymakepkg \
               -v \
