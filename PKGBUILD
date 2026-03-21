@@ -84,11 +84,14 @@ fi
 if [[ ! -v "_tag_name" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
     _tag_name="commit"
+    _llhttp_tag_name="commit"
   elif [[ "${_evmfs}" == "false" ]]; then
     if [[ "${_git}" == "true" ]]; then
       _tag_name="commit"
+      _llhttp_tag_name="commit"
     elif [[ "${_git}" == "false" ]]; then
       _tag_name="tag"
+      _llhttp_tag_name="tag"
     fi
   fi
 fi
@@ -226,10 +229,12 @@ _gitlab_sum="e975ef3dd65c17396dbfb605ef43614dcb0abd59b45fb32498ffa07321688bf4"
 _gitlab_sig_sum="baaab158cd64ab456ed368f43d82c2a9dc02e9074e5fcbabe86f0a2cd9954298"
 _github_sum="86944e981cdaad57ab456b5ed39967649e9d0d3d3355ea4fc44234d4cd4aa934"
 _github_sig_sum="f822f8faade3a590a3abc20d480837ce9f9fcbdddeac3e5e3326f280ebacad4b"
-_llhttp_sum="SKIP"
-_llhttp_sig_sum="SKIP"
+_llhttp_sum="9b8a4838b5813c4ad11dfb79e695bd867b493ec7f13aae00a7567c64c10613a5"
+_llhttp_sig_sum="f5d3d61c7088e540ec5fd03c70bfe835f1120b524d00ec45a0a6c4d9e438fb8b"
 _bundle_sum="SKIP"
 _bundle_sig_sum="SKIP"
+_llhttp_bundle_sum="SKIP"
+_llhttp_bundle_sig_sum="SKIP"
 if [[ "${_evmfs}" == "true" ]]; then
   if [[ "${_git}" == "true" ]]; then
     _sum="${_bundle_sum}"
@@ -314,13 +319,14 @@ elif [[ "${_evmfs}" == "false" ]]; then
         _uri="${_url}/archive/${_commit}.${_archive_format}"
         _src="${_tarfile}::${_uri}"
         _sum="${_github_sum}"
+        _llhttp_sum='SKIP'
       fi
     elif [[ "${_git_service}" == "gitlab" ]]; then
       _src="hurr"
       _sum="whatever"
+      _llhttp_sum='SKIP'
     fi
     _llhttp_src="${_llhttp_tarname}.tar.gz::${_llhttp_url}/archive/refs/tags/v${_llhttp_pkgver}.tar.gz"
-    _llhttp_sum='SKIP'
   fi
 fi
 source+=(
@@ -337,8 +343,12 @@ sha256sums+=(
 # )
 
 prepare() {
+  ls \
+    -lsh
   cd \
     "${_tarname}"
+  ls \
+    -lsh
   if [[ "${_git}" == "true" ]]; then
     git \
       submodule \
@@ -356,11 +366,16 @@ prepare() {
   elif [[ "${_git}" == "false" ]]; then
     mkdir \
       -p \
+      "vendor/llhttp"
+    ls \
+      -lsh \
       "vendor"
+    # if [[ "${_llhttp_tag_name}" == "tag" ]]; then
     cp \
       -r \
       "../${_llhttp_tarname}/"* \
-      "vendor/llhttp-${_llhttp_pkgver}"
+      "vendor/llhttp"
+    #fi
   fi
   sed \
     's|.install-cython ||' \
