@@ -46,30 +46,30 @@ jobs:
     strategy:
       matrix:
         include:
-          # - runner:
-          #     ubuntu-24.04-arm
-          #   platform:
-          #     android
-          #   platform_target:
-          #     termux
-          #   architecture:
-          #     aarch64
-          # - runner:
-          #     ubuntu-24.04
-          #   platform:
-          #     android
-          #   platform_target:
-          #     termux
-          #   architecture:
-          #     i686
-          # - runner:
-          #     ubuntu-24.04-armv7l
-          #   platform:
-          #     android
-          #   platform_target:
-          #     termux
-          #   architecture:
-          #     armv7l
+          - runner:
+              ubuntu-24.04-arm
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              aarch64
+          - runner:
+              ubuntu-24.04
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              i686
+          - runner:
+              ubuntu-24.04-armv7l
+            platform:
+              android
+            platform_target:
+              termux
+            architecture:
+              armv7l
           - runner:
               ubuntu-24.04
             platform:
