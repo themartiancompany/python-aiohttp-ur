@@ -171,8 +171,8 @@ makedepends=(
   "${_py}-installer"
   "${_py}-setuptools"
   "${_py}-wheel"
+  "${_py}-multidict"
 )
-fi
 if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     'git'
