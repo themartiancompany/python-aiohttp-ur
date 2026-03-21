@@ -899,7 +899,8 @@ jobs:
               -- \
               -df \
               --nocheck \
-              --skippgpcheck
+              --skippgpcheck \
+              --skipinteg
           /entrypoint.sh \
             echo \
               "Home: ${HOME}"
@@ -939,7 +940,8 @@ jobs:
             makepkg \
               --nobuild \
               -df \
-              --skippgpcheck
+              --skippgpcheck \
+              --skipinteg
           echo \
             "::set-output name=version::$( \
               /entrypoint.sh \
@@ -1632,7 +1634,7 @@ jobs:
                 "pkgbase")"
           su \
             -c \
-              "cd ${PWD} && _evmfs="false" _git_service="github" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck && ls -lsh" - \
+              "cd ${PWD} && _evmfs="false" _git_service="github" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck --skipinteg && ls -lsh" - \
             "user"
       # - name:
       #     Installs the package.
@@ -2064,7 +2066,8 @@ jobs:
           makepkg \
             -df \
             --nocheck \
-            --skippgpcheck
+            --skippgpcheck \
+            --skipinteg
           # _evmfs="false" \
           # _git_service="github" \
           # reallymakepkg \
