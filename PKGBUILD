@@ -58,7 +58,7 @@ if [[ ! -v "_git" ]]; then
   if [[ "${_evmfs}" == "true" ]]; then
     _git="false"
   elif [[ "${_evmfs}" == "false" ]]; then
-    _git="true"
+    _git="false"
   fi
 fi
 if [[ ! -v "_offline" ]]; then
